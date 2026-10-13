@@ -1,0 +1,10 @@
+class TritonMLP3(torch.nn.Module):
+    def forward(self, x):
+        # No stacktrace found for following nodes
+        fc1_weight = self.fc1.weight
+        fc1_bias = self.fc1.bias
+        fc2_weight = self.fc2.weight
+        fc2_bias = self.fc2.bias
+        fused_mlp2 = torch.ops.triton_exp.fused_mlp2(x, fc1_weight, fc1_bias, fc2_weight, fc2_bias);  x = fc1_weight = fc1_bias = fc2_weight = fc2_bias = None
+        fc3 = self.fc3(fused_mlp2);  fused_mlp2 = None
+        return fc3

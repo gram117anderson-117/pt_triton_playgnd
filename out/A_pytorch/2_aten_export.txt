@@ -1,0 +1,14 @@
+graph():
+    %p_fc1_weight : [num_users=1] = placeholder[target=p_fc1_weight]
+    %p_fc1_bias : [num_users=1] = placeholder[target=p_fc1_bias]
+    %p_fc2_weight : [num_users=1] = placeholder[target=p_fc2_weight]
+    %p_fc2_bias : [num_users=1] = placeholder[target=p_fc2_bias]
+    %p_fc3_weight : [num_users=1] = placeholder[target=p_fc3_weight]
+    %p_fc3_bias : [num_users=1] = placeholder[target=p_fc3_bias]
+    %x : [num_users=1] = placeholder[target=x]
+    %linear : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%x, %p_fc1_weight, %p_fc1_bias), kwargs = {})
+    %relu : [num_users=1] = call_function[target=torch.ops.aten.relu.default](args = (%linear,), kwargs = {})
+    %linear_1 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%relu, %p_fc2_weight, %p_fc2_bias), kwargs = {})
+    %relu_1 : [num_users=1] = call_function[target=torch.ops.aten.relu.default](args = (%linear_1,), kwargs = {})
+    %linear_2 : [num_users=1] = call_function[target=torch.ops.aten.linear.default](args = (%relu_1, %p_fc3_weight, %p_fc3_bias), kwargs = {})
+    return (linear_2,)

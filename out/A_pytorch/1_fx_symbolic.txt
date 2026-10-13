@@ -1,0 +1,8 @@
+graph():
+    %x : [num_users=1] = placeholder[target=x]
+    %fc1 : [num_users=1] = call_module[target=fc1](args = (%x,), kwargs = {})
+    %act1 : [num_users=1] = call_module[target=act1](args = (%fc1,), kwargs = {})
+    %fc2 : [num_users=1] = call_module[target=fc2](args = (%act1,), kwargs = {})
+    %act2 : [num_users=1] = call_module[target=act2](args = (%fc2,), kwargs = {})
+    %fc3 : [num_users=1] = call_module[target=fc3](args = (%act2,), kwargs = {})
+    return fc3

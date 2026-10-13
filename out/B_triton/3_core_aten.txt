@@ -1,0 +1,12 @@
+graph():
+    %p_fc1_weight : [num_users=1] = placeholder[target=p_fc1_weight]
+    %p_fc1_bias : [num_users=1] = placeholder[target=p_fc1_bias]
+    %p_fc2_weight : [num_users=1] = placeholder[target=p_fc2_weight]
+    %p_fc2_bias : [num_users=1] = placeholder[target=p_fc2_bias]
+    %p_fc3_weight : [num_users=1] = placeholder[target=p_fc3_weight]
+    %p_fc3_bias : [num_users=1] = placeholder[target=p_fc3_bias]
+    %x : [num_users=1] = placeholder[target=x]
+    %fused_mlp2 : [num_users=1] = call_function[target=torch.ops.triton_exp.fused_mlp2.default](args = (%x, %p_fc1_weight, %p_fc1_bias, %p_fc2_weight, %p_fc2_bias), kwargs = {})
+    %permute : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%p_fc3_weight, [1, 0]), kwargs = {})
+    %addmm : [num_users=1] = call_function[target=torch.ops.aten.addmm.default](args = (%p_fc3_bias, %fused_mlp2, %permute), kwargs = {})
+    return (addmm,)

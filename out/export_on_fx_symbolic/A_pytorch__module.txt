@@ -1,0 +1,36 @@
+ExportedProgram:
+    class GraphModule(torch.nn.Module):
+        def forward(self, p_fc1_weight: "f32[32, 16]", p_fc1_bias: "f32[32]", p_fc2_weight: "f32[32, 32]", p_fc2_bias: "f32[32]", p_fc3_weight: "f32[8, 32]", p_fc3_bias: "f32[8]", x: "f32[4, 16]"):
+            # File: /home/grammy/agent_playground/triton_exp/.venv/lib/python3.11/site-packages/torch/nn/modules/linear.py:134 in forward, code: return F.linear(input, self.weight, self.bias)
+            linear: "f32[4, 32]" = torch.ops.aten.linear.default(x, p_fc1_weight, p_fc1_bias);  x = p_fc1_weight = p_fc1_bias = None
+    
+            # File: /home/grammy/agent_playground/triton_exp/.venv/lib/python3.11/site-packages/torch/nn/modules/activation.py:143 in forward, code: return F.relu(input, inplace=self.inplace)
+            relu: "f32[4, 32]" = torch.ops.aten.relu.default(linear);  linear = None
+    
+            # File: /home/grammy/agent_playground/triton_exp/.venv/lib/python3.11/site-packages/torch/nn/modules/linear.py:134 in forward, code: return F.linear(input, self.weight, self.bias)
+            linear_1: "f32[4, 32]" = torch.ops.aten.linear.default(relu, p_fc2_weight, p_fc2_bias);  relu = p_fc2_weight = p_fc2_bias = None
+    
+            # File: /home/grammy/agent_playground/triton_exp/.venv/lib/python3.11/site-packages/torch/nn/modules/activation.py:143 in forward, code: return F.relu(input, inplace=self.inplace)
+            relu_1: "f32[4, 32]" = torch.ops.aten.relu.default(linear_1);  linear_1 = None
+    
+            # File: /home/grammy/agent_playground/triton_exp/.venv/lib/python3.11/site-packages/torch/nn/modules/linear.py:134 in forward, code: return F.linear(input, self.weight, self.bias)
+            linear_2: "f32[4, 8]" = torch.ops.aten.linear.default(relu_1, p_fc3_weight, p_fc3_bias);  relu_1 = p_fc3_weight = p_fc3_bias = None
+            return (linear_2,)
+    
+Graph signature:
+    # inputs
+    p_fc1_weight: PARAMETER target='fc1.weight'
+    p_fc1_bias: PARAMETER target='fc1.bias'
+    p_fc2_weight: PARAMETER target='fc2.weight'
+    p_fc2_bias: PARAMETER target='fc2.bias'
+    p_fc3_weight: PARAMETER target='fc3.weight'
+    p_fc3_bias: PARAMETER target='fc3.bias'
+    x: USER_INPUT
+    
+    # outputs
+    linear_2: USER_OUTPUT
+    
+Range constraints: {}
+
+
+# ep.module()(x) matches eager model: True

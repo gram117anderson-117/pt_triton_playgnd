@@ -1,0 +1,9 @@
+graph():
+    %x : [num_users=1] = placeholder[target=x]
+    %fc1_weight : [num_users=1] = get_attr[target=fc1.weight]
+    %fc1_bias : [num_users=1] = get_attr[target=fc1.bias]
+    %fc2_weight : [num_users=1] = get_attr[target=fc2.weight]
+    %fc2_bias : [num_users=1] = get_attr[target=fc2.bias]
+    %fused_mlp2 : [num_users=1] = call_function[target=torch.ops.triton_exp.fused_mlp2](args = (%x, %fc1_weight, %fc1_bias, %fc2_weight, %fc2_bias), kwargs = {})
+    %fc3 : [num_users=1] = call_module[target=fc3](args = (%fused_mlp2,), kwargs = {})
+    return fc3
